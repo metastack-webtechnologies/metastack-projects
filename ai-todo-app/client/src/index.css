@@ -1,0 +1,360 @@
+/* Color Palette (Inspired by Screenshot) */
+:root {
+  --primary-blue: #4a90e2; /* Main blue for buttons, highlights */
+  --secondary-green: #28a745; /* Green for complete/success */
+  --accent-orange: #f5a623; /* Orange for accents/warnings (e.g., high priority) */
+  --text-dark: #2c3e50; /* Dark text for headings */
+  --text-medium: #555; /* Medium gray for general text */
+  --text-light: #888; /* Light gray for secondary text */
+  --bg-light: #f0f2f5; /* Light background for body */
+  --bg-card: #ffffff; /* White background for cards/containers */
+  --border-light: #e0e0e0; /* Light border color */
+  --shadow-subtle: rgba(0, 0, 0, 0.08); /* Subtle shadow */
+  --shadow-button: rgba(0, 0, 0, 0.1); /* Button shadow */
+}
+
+/* General Body and Root Styling */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif; /* Using Inter font, common in modern UIs */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-light); /* Light gray background */
+  color: var(--text-medium);
+  line-height: 1.6;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align to top */
+  min-height: 100vh; /* Full viewport height */
+  padding: 20px; /* Padding around the main app container */
+  box-sizing: border-box;
+}
+
+#root {
+  width: 100%;
+  max-width: 600px; /* Slightly narrower for app-like feel */
+  background-color: var(--bg-card); /* White background for cards/containers */
+  border-radius: 16px; /* More rounded corners */
+  box-shadow: 0 10px 30px var(--shadow-subtle); /* Softer, larger shadow */
+  padding: 25px; /* Increased padding */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Space between major sections */
+  
+  /* Initial animation for the whole app container (handled by Framer Motion in App.jsx) */
+  /* animation: fadeInScale 0.5s ease-out forwards; */
+  /* opacity: 0; */
+  /* transform: scale(0.98); */
+
+  /* NEW: Add a border */
+  border: 1px solid var(--border-light); /* A thin, light gray border */
+}
+
+/* Header Styling */
+h1 {
+  text-align: center;
+  color: var(--text-dark); /* Darker blue/gray for prominence */
+  margin-bottom: 1rem;
+  font-size: 2.2em;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* Button Base Styling */
+button {
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 8px; /* More rounded buttons */
+  background-color: var(--primary-blue); /* A pleasant blue */
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 5px var(--shadow-button);
+  white-space: nowrap; /* Prevent text wrapping on buttons */
+}
+
+button:hover {
+  background-color: #357ABD; /* Slightly darker blue on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px var(--shadow-button);
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Input Fields Styling */
+input[type="text"],
+textarea,
+select {
+  width: 100%; /* Full width within their container */
+  padding: 12px 15px;
+  border: 1px solid var(--border-light); /* Lighter border */
+  border-radius: 8px; /* Rounded corners */
+  font-size: 1rem;
+  box-sizing: border-box;
+  margin-bottom: 10px; /* Space below inputs */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Smooth transitions */
+}
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary-blue); /* Highlight on focus */
+  outline: none; /* Remove default outline */
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2); /* Subtle glow on focus */
+}
+
+/* Filter Button Group Styling */
+.filter-group {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.filter-group button {
+  background-color: var(--bg-light); /* Light gray for inactive filters */
+  color: var(--text-medium);
+  box-shadow: none;
+  padding: 0.6rem 1rem; /* Slightly smaller padding */
+  font-weight: 500;
+  border: 1px solid var(--border-light); /* Add border to inactive filters */
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; /* Smooth transitions */
+}
+
+.filter-group button.active {
+  background-color: var(--primary-blue); /* Blue for active filter */
+  color: white;
+  box-shadow: 0 2px 5px var(--shadow-button);
+  border-color: var(--primary-blue); /* Active border matches background */
+}
+
+.filter-group button:hover:not(.active) {
+  background-color: #e8e8e8; /* Slightly darker gray on hover for inactive */
+  transform: none; /* No transform on hover for inactive */
+  box-shadow: none;
+}
+
+/* Task List Container */
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between task items */
+}
+
+/* Task Item Styling */
+.task-item {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-card); /* White background */
+  padding: 15px 20px; /* More padding */
+  border-radius: 12px; /* More rounded corners */
+  box-shadow: 0 2px 8px var(--shadow-subtle); /* Subtle shadow */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease; /* Smooth transitions */
+  
+  /* Framer Motion will handle task appearance/disappearance, so remove CSS animations here */
+  /* animation: slideInFromRight 0.4s ease-out forwards; */
+  /* opacity: 0; */
+  /* transform: translateX(20px); */
+}
+
+.task-item:hover {
+  transform: translateY(-3px); /* Slight lift on hover */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* More pronounced shadow on hover */
+}
+
+.task-item.completed {
+  background-color: #e6f7e6; /* Lighter green for completed */
+  border-left: 5px solid var(--secondary-green); /* Green bar on left */
+  opacity: 0.9; /* Slightly less opaque */
+}
+
+.task-content-main {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.task-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-light);
+  border-radius: 4px;
+  margin-right: 15px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0; /* Prevent shrinking */
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.task-checkbox.completed {
+  background-color: var(--secondary-green);
+  border-color: var(--secondary-green);
+  color: white;
+  /* Framer Motion will handle checkmark animation */
+  /* animation: checkmarkBounce 0.3s ease-out; */
+}
+
+.task-checkbox.completed::after {
+  content: '✓'; /* Checkmark for completed */
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.task-text {
+  font-size: 1.1em;
+  font-weight: 500;
+  flex-grow: 1; /* Allow text to grow */
+  color: var(--text-dark);
+}
+
+.task-text.completed {
+  text-decoration: line-through;
+  color: var(--text-light);
+}
+
+.task-details-row {
+  display: flex;
+  gap: 15px;
+  font-size: 0.85em;
+  color: var(--text-medium);
+  margin-top: 5px;
+  flex-wrap: wrap;
+}
+
+.task-details-row span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Icons for details (using simple text/emoji for now) */
+.task-details-row span::before {
+  font-size: 1em;
+}
+.task-details-row span.priority::before { content: '⚡'; } /* Lightning bolt */
+.task-details-row span.due-date::before { content: '📅'; } /* Calendar */
+.task-details-row span.category::before { content: '🏷️'; } /* Tag */
+.task-details-row span.status::before { content: '✅'; } /* Checkmark */
+
+/* Specific priority colors */
+.task-details-row span.priority strong {
+  font-weight: 700;
+}
+.task-details-row span.priority strong.High {
+  color: #e74c3c; /* Red for High priority */
+}
+.task-details-row span.priority strong.Medium {
+  color: var(--accent-orange); /* Orange for Medium priority */
+}
+.task-details-row span.priority strong.Low {
+  color: #2ecc71; /* Green for Low priority */
+}
+.task-details-row span.priority strong.None {
+  color: var(--text-light); /* Light gray for None priority */
+}
+
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 15px;
+  justify-content: flex-end;
+}
+
+.task-actions button {
+  padding: 0.6rem 1rem;
+  font-size: 0.9em;
+  box-shadow: none; /* Remove individual button shadows */
+}
+
+.task-actions button.complete-btn {
+  background-color: var(--secondary-green);
+}
+
+.task-actions button.complete-btn:hover {
+  background-color: #218838;
+}
+
+.task-actions button.delete-btn {
+  background-color: #dc3545;
+}
+
+.task-actions button.delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* Messages */
+.loading-message, .error-message, .empty-list {
+  text-align: center;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.loading-message {
+  color: var(--primary-blue);
+  background-color: #e0f2ff;
+  font-style: italic;
+}
+
+.error-message {
+  color: #dc3545;
+  background-color: #ffe6e6;
+  border: 1px solid #dc3545;
+}
+
+.empty-list {
+  color: var(--text-light);
+  background-color: #f5f5f5;
+}
+
+/* Specific styles for VoiceInputButton's select */
+.voice-input-container {
+  display: flex; /* Make it a flex container */
+  align-items: center; /* Vertically align items */
+  gap: 8px; /* Space between select and button */
+  margin-bottom: 1rem;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.voice-input-container select {
+    width: auto; /* Allow select to size to content */
+    margin-right: 0; /* Remove default margin */
+    margin-bottom: 0; /* Remove bottom margin if in flex row */
+    flex-shrink: 0; /* Don't let it shrink */
+}
+
+/* TaskForm specific styles */
+.task-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between input and select/button */
+    margin-bottom: 1rem;
+}
+
+.task-form-input-group {
+    display: flex;
+    flex-direction: column; /* Stack input and select */
+    gap: 10px; /* Space between input and select */
+}
+
+.task-form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end; /* Align button to right */
+}

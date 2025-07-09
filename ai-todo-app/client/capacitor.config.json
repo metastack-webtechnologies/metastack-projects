@@ -1,0 +1,5 @@
+{
+  "appId": "com.metastack.aitodo",
+  "appName": "AI ToDo App",
+  "webDir": "dist"
+}
