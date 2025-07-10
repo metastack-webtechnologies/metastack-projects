@@ -1,65 +1,87 @@
 import axios from 'axios';
 
-// Get API URL from Vite environment variable
-// Ensure this matches your backend's URL, e.g., http://192.168.0.102:5000/api
-const API_URL = import.meta.env.VITE_REACT_APP_API_URL || 'http://localhost:5000/api';
+// Get API URL from Vite environment variable.
+// This variable should be defined in your .env.development file (in the client directory)
+// e.g., VITE_API_BASE_URL=http://localhost:8000/api
+// For production, you'd have a .env.production file with your live backend URL.
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
-export const addTask = async (taskText, category = 'Personal') => { // NEW: Add category parameter with default
+// Function to add a new task to the backend
+export const addTask = async (taskText, category = 'Personal') => {
   try {
-    const response = await axios.post(`${API_URL}/tasks/`, { text: taskText, category: category }, { // Send category
+    // Make a POST request to the tasks endpoint
+    // The full URL will be http://localhost:8000/api/tasks/
+    const response = await axios.post(`${API_BASE_URL}/tasks/`, { text: taskText, category: category }, {
       headers: {
         'Content-Type': 'application/json',
         // 'Authorization': `Bearer ${localStorage.getItem('token')}` // Uncomment if you add authentication
       },
     });
-    return response.data; // Django REST Framework returns the created object directly
+    // Django REST Framework typically returns the created object directly upon success
+    return response.data;
   } catch (error) {
+    // Log the error for debugging purposes
     console.error('Error adding task:', error.response?.data || error.message);
+    // Re-throw a more user-friendly error message or the backend's error data
     throw error.response?.data || new Error('Failed to add task');
   }
 };
 
-// getTasks now accepts params for filtering
+// Function to fetch tasks from the backend, with optional filtering parameters
 export const getTasks = async (params = {}) => {
   try {
-    const response = await axios.get(`${API_URL}/tasks/`, {
-      params: params, // Pass parameters to Axios
+    // Make a GET request to the tasks endpoint
+    // Parameters (e.g., { status: 'completed' }) will be appended as query strings
+    const response = await axios.get(`${API_BASE_URL}/tasks/`, {
+      params: params, // Pass filtering parameters to Axios
       headers: {
-        // 'Authorization': `Bearer ${localStorage.getItem('token')}`
+        // 'Authorization': `Bearer ${localStorage.getItem('token')}` // Uncomment if you add authentication
       },
     });
-    return response.data; // DRF returns a list of objects
+    // DRF typically returns a list of objects
+    return response.data;
   } catch (error) {
+    // Log the error for debugging purposes
     console.error('Error fetching tasks:', error.response?.data || error.message);
+    // Re-throw a more user-friendly error message or the backend's error data
     throw error.response?.data || new Error('Failed to fetch tasks');
   }
 };
 
+// Function to update an existing task (partial update using PATCH)
 export const updateTask = async (id, updatedData) => {
   try {
-    const response = await axios.patch(`${API_URL}/tasks/${id}/`, updatedData, { // Use PATCH for partial updates
+    // Make a PATCH request to a specific task's endpoint (e.g., /api/tasks/123/)
+    const response = await axios.patch(`${API_BASE_URL}/tasks/${id}/`, updatedData, {
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${localStorage.getItem('token')}`
+        // 'Authorization': `Bearer ${localStorage.getItem('token')}` // Uncomment if you add authentication
       },
     });
-    return response.data; // DRF returns the updated object
+    // DRF typically returns the updated object
+    return response.data;
   } catch (error) {
+    // Log the error for debugging purposes
     console.error('Error updating task:', error.response?.data || error.message);
+    // Re-throw a more user-friendly error message or the backend's error data
     throw error.response?.data || new Error('Failed to update task');
   }
 };
 
+// Function to delete a task
 export const deleteTask = async (id) => {
   try {
-    await axios.delete(`${API_URL}/tasks/${id}/`, {
+    // Make a DELETE request to a specific task's endpoint (e.g., /api/tasks/123/)
+    await axios.delete(`${API_BASE_URL}/tasks/${id}/`, {
       headers: {
-        // 'Authorization': `Bearer ${localStorage.getItem('token')}`
+        // 'Authorization': `Bearer ${localStorage.getItem('token')}` // Uncomment if you add authentication
       },
     });
-    // No data returned for delete, just status
+    // No data is typically returned for a successful delete, just a status code (e.g., 204 No Content)
   } catch (error) {
+    // Log the error for debugging purposes
     console.error('Error deleting task:', error.response?.data || error.message);
+    // Re-throw a more user-friendly error message or the backend's error data
     throw error.response?.data || new Error('Failed to delete task');
   }
 };
