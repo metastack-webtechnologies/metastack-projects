@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Logistics OS - Advanced Login UI</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome 6 (working CDN) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous"/>
+
+  <!-- Alpine.js -->
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+  <!-- Lottie Web Component -->
+  <script type="module" src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js"></script>
+
+  <!-- Fonts + styles -->
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+    body { font-family: "Inter", sans-serif; }
+    #particle-canvas {
+      position: fixed; inset: 0; width: 100%; height: 100%;
+      z-index: -1;
+      background: linear-gradient(45deg, #001529, #002347, #063970);
+    }
+    .form-container {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background-color: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .input-field { transition: all 0.3s ease; }
+    .input-field:focus {
+      transform: scale(1.02);
+      box-shadow: 0 0 20px rgba(56,189,248,0.3);
+      border-color: #38bdf8;
+    }
+    #preloader{
+      position:fixed; inset:0; width:100%; height:100%;
+      background:#001529; z-index:100;
+      display:flex; align-items:center; justify-content:center;
+      transition: opacity .5s ease-out, visibility .5s ease-out;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-900">
+  <!-- Preloader -->
+  <div id="preloader">
+    <dotlottie-wc
+      src="https://lottie.host/f4bd2842-d800-4727-b182-5fe6c08e8ea3/r7IvDehP8B.lottie"
+      style="width: 300px; height: 300px" speed="1" autoplay loop>
+    </dotlottie-wc>
+  </div>
+
+  <!-- Main -->
+  <div id="main-content"
+       class="opacity-0 transition-opacity duration-500"
+       x-data="{ view:'manager', managerView:'login' }">
+
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="container mx-auto p-4 sm:p-8 min-h-screen flex items-center justify-center">
+      <div class="w-full">
+        <!-- Tabs -->
+        <div class="text-center mb-8">
+          <div class="mt-4 inline-flex bg-black/20 rounded-lg p-1 shadow-sm border border-white/20">
+            <button
+              @click="view='manager'; managerView='login'"
+              :class="{ 'bg-sky-500 text-white': view==='manager', 'text-gray-200 hover:bg-white/10': view!=='manager' }"
+              class="px-4 py-2 rounded-md font-semibold transition-all duration-300">
+              Manager
+            </button>
+            <button
+              @click="view='driver'"
+              :class="{ 'bg-sky-500 text-white': view==='driver', 'text-gray-200 hover:bg-white/10': view!=='driver' }"
+              class="px-4 py-2 rounded-md font-semibold transition-all duration-300">
+              Driver Login
+            </button>
+          </div>
+        </div>
+
+        <!-- MANAGER SECTION -->
+        <div x-show="view==='manager'">
+          <div class="flex items-center justify-center">
+            <div class="w-full max-w-4xl form-container rounded-2xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
+              
+              <!-- Left panel -->
+              <div class="p-12 text-white bg-sky-600/30 hidden md:flex flex-col justify-center items-center text-center transition-all duration-500"
+                   :class="{ 'md:order-last': managerView==='register' }">
+                <dotlottie-wc
+                  src="https://lottie.host/5b3f3849-abf2-4b14-82b7-889c396cffde/rl8bYwAqS1.lottie"
+                  style="width: 300px; height: 300px" speed="1" autoplay loop>
+                </dotlottie-wc>
+                <h2 class="text-4xl font-bold mt-4">Logistics OS</h2>
+                <p class="mt-2 text-sky-200">The complete solution for managing your delivery operations.</p>
+              </div>
+
+              <!-- Right panel -->
+              <div class="p-12 relative" x-data="{ submitting:false }">
+                
+                <!-- MANAGER LOGIN -->
+                <div x-show="managerView==='login'"
+                     x-data="{ showPassword:false }"
+                     x-transition
+                     class="absolute inset-0 p-12">
+                  <form @submit.prevent="submitting=true; setTimeout(()=>submitting=false, 1500)" class="space-y-6">
+                    <div class="text-center mb-8">
+                      <h3 class="text-2xl font-bold text-white">Manager Login</h3>
+                      <p class="text-sky-200">Welcome back</p>
+                    </div>
+
+                    <div>
+                      <label for="manager-email" class="block text-sm font-medium text-sky-200">Email Address</label>
+                      <input id="manager-email" type="email" required
+                             class="mt-1 w-full px-3 py-2 bg-white/10 border border-sky-400 rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-sky-300 input-field"/>
+                    </div>
+
+                    <div>
+                      <label for="manager-password" class="block text-sm font-medium text-sky-200">Password</label>
+                      <div class="mt-1 relative">
+                        <input id="manager-password"
+                               :type="showPassword ? 'text' : 'password'"
+                               required
+                               class="w-full pr-10 px-3 py-2 bg-white/10 border border-sky-400 rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-sky-300 input-field"/>
+                        <button type="button" @click="showPassword = !showPassword"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sky-200 hover:text-white"
+                                aria-label="Toggle password visibility">
+                          <i class="fa-solid" :class="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                      <label class="inline-flex items-center">
+                        <input id="remember-me" type="checkbox"
+                               class="h-4 w-4 text-sky-500 focus:ring-sky-400 border-sky-400 rounded bg-white/10">
+                        <span class="ml-2 text-sm text-sky-100">Remember me</span>
+                      </label>
+                      <a href="#" class="text-sm font-medium text-sky-300 hover:text-sky-100">Forgot password?</a>
+                    </div>
+
+                    <button type="submit"
+                            class="w-full flex justify-center items-center py-3 px-4 rounded-md text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all duration-300 hover:scale-105 active:scale-95">
+                      <span x-show="!submitting">Sign In</span>
+                      <i x-show="submitting" class="fa-solid fa-spinner fa-spin"></i>
+                    </button>
+
+                    <p class="text-center text-sm text-sky-200">
+                      Don’t have an account?
+                      <a href="#" @click.prevent="managerView='register'" class="font-medium text-sky-300 hover:text-sky-100">Register here</a>
+                    </p>
+                  </form>
+                </div>
+
+                <!-- MANAGER REGISTER -->
+                <div x-show="managerView==='register'"
+                     x-data="{ showPassword1:false }"
+                     x-transition
+                     class="absolute inset-0 p-12" style="display:none">
+                  <form @submit.prevent="submitting=true; setTimeout(()=>submitting=false, 1500)" class="space-y-4">
+                    <div class="text-center mb-6">
+                      <h3 class="text-2xl font-bold text-white">Create Manager Account</h3>
+                      <p class="text-sky-200">Get started with Logistics OS</p>
+                    </div>
+
+                    <div>
+                      <label for="register-company" class="block text-sm font-medium text-sky-200">Company Name</label>
+                      <input id="register-company" type="text" required
+                             class="mt-1 w-full px-3 py-2 bg-white/10 border border-sky-400 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-sky-300 input-field"/>
+                    </div>
+
+                    <div>
+                      <label for="register-email" class="block text-sm font-medium text-sky-200">Email Address</label>
+                      <input id="register-email" type="email" required
+                             class="mt-1 w-full px-3 py-2 bg-white/10 border border-sky-400 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-sky-300 input-field"/>
+                    </div>
+
+                    <div class="relative">
+                      <label for="register-password" class="block text-sm font-medium text-sky-200">Password</label>
+                      <input id="register-password"
+                             :type="showPassword1 ? 'text' : 'password'"
+                             required
+                             class="mt-1 w-full pr-10 px-3 py-2 bg-white/10 border border-sky-400 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-sky-300 input-field"/>
+                      <button type="button" @click="showPassword1 = !showPassword1"
+                              class="absolute inset-y-11 right-0 pr-3 flex items-center text-sky-200 hover:text-white"
+                              aria-label="Toggle password visibility">
+                        <i class="fa-solid" :class="showPassword1 ? 'fa-eye-slash' : 'fa-eye'"></i>
+                      </button>
+                    </div>
+
+                    <button type="submit"
+                            class="w-full flex justify-center items-center py-3 px-4 rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 hover:scale-105 active:scale-95">
+                      <span x-show="!submitting">Create Account</span>
+                      <i x-show="submitting" class="fa-solid fa-spinner fa-spin"></i>
+                    </button>
+
+                    <p class="text-center text-sm text-sky-200">
+                      Already have an account?
+                      <a href="#" @click.prevent="managerView='login'" class="font-medium text-sky-300 hover:text-sky-100">Sign in</a>
+                    </p>
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DRIVER SECTION -->
+        <div x-show="view==='driver'" style="display:none">
+          <div class="flex justify-center items-center">
+            <div class="w-96 h-[750px] bg-gray-800 rounded-[40px] p-4 shadow-2xl border-4 border-gray-900">
+              <div class="bg-gray-900 h-full w-full rounded-[24px] overflow-y-auto flex flex-col justify-center p-6"
+                   x-data="{ submitting:false, showDriverPwd:false }">
+                <div class="text-center mb-10">
+                  <h2 class="text-3xl font-bold text-sky-400">Driver Login</h2>
+                  <p class="text-gray-400 mt-1">Welcome Back</p>
+                </div>
+                <form @submit.prevent="submitting=true; setTimeout(()=>submitting=false, 1500)" class="space-y-6">
+                  <div>
+                    <label for="driver-phone" class="block text-sm font-medium text-gray-300">Mobile Number</label>
+                    <input id="driver-phone" type="tel" required
+                           class="mt-1 w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-sky-500 input-field"/>
+                  </div>
+
+                  <div>
+                    <label for="driver-password" class="block text-sm font-medium text-gray-300">Password</label>
+                    <div class="mt-1 relative">
+                      <input id="driver-password"
+                             :type="showDriverPwd ? 'text' : 'password'"
+                             required
+                             class="w-full pr-10 px-3 py-2 bg-gray-800 border border-gray-600 rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-sky-500 input-field"/>
+                      <button type="button" @click="showDriverPwd = !showDriverPwd"
+                              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-300 hover:text-white"
+                              aria-label="Toggle password visibility">
+                        <i class="fa-solid" :class="showDriverPwd ? 'fa-eye-slash' : 'fa-eye'"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <button type="submit"
+                          class="w-full flex justify-center items-center py-4 px-4 rounded-md text-lg font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-all duration-300 hover:scale-105 active:scale-95">
+                    <span x-show="!submitting">Login</span>
+                    <i x-show="submitting" class="fa-solid fa-spinner fa-spin"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /DRIVER SECTION -->
+
+      </div>
+    </div>
+
+  <!-- Scripts -->
+  <script>
+    // Preloader
+    window.addEventListener("load", () => {
+      const preloader = document.getElementById("preloader");
+      const mainContent = document.getElementById("main-content");
+      setTimeout(() => {
+        preloader.style.opacity = "0";
+        preloader.style.visibility = "hidden";
+        mainContent.style.opacity = "1";
+      }, 1200);
+    });
+
+    // Particle background
+    const canvas = document.getElementById("particle-canvas");
+    const ctx = canvas.getContext("2d");
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    let particlesArray = [];
+    const mouse = { x: null, y: null, radius:  (canvas.height/100) * (canvas.width/100) };
+
+    window.addEventListener("mousemove", e => { mouse.x = e.x; mouse.y = e.y; });
+    window.addEventListener("mouseout", () => { mouse.x = undefined; mouse.y = undefined; });
+
+    class Particle {
+      constructor(x,y,dx,dy,size){ this.x=x; this.y=y; this.dx=dx; this.dy=dy; this.size=size; }
+      draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2,false); ctx.fillStyle="rgba(125,211,252,0.2)"; ctx.fill(); }
+      update(){
+        if(this.x > canvas.width || this.x < 0) this.dx = -this.dx;
+        if(this.y > canvas.height || this.y < 0) this.dy = -this.dy;
+        this.x += this.dx; this.y += this.dy;
+        this.draw();
+      }
+    }
+
+    function init(){
+      particlesArray = [];
+      const number = (canvas.height * canvas.width) / 9000;
+      for(let i=0; i<number; i++){
+        const size = Math.random()*2 + 1;
+        const x = Math.random()*(innerWidth - size*4) + size*2;
+        const y = Math.random()*(innerHeight - size*4) + size*2;
+        const dx = Math.random()*0.4 - 0.2;
+        const dy = Math.random()*0.4 - 0.2;
+        particlesArray.push(new Particle(x,y,dx,dy,size));
+      }
+    }
+
+    function connect(){
+      for(let a=0; a<particlesArray.length; a++){
+        for(let b=a; b<particlesArray.length; b++){
+          const dx = particlesArray[a].x - particlesArray[b].x;
+          const dy = particlesArray[a].y - particlesArray[b].y;
+          const dist = dx*dx + dy*dy;
+          if(dist < (canvas.width/7)*(canvas.height/7)){
+            const opacity = 1 - dist/20000;
+            ctx.strokeStyle = `rgba(125,211,252,${opacity*0.3})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+            ctx.stroke();
+          }
+        }
+      }
+      if(mouse.x && mouse.y){
+        for(const p of particlesArray){
+          const dx = mouse.x - p.x;
+          const dy = mouse.y - p.y;
+          const d = Math.sqrt(dx*dx + dy*dy);
+          if(d < mouse.radius){
+            ctx.strokeStyle = `rgba(125,211,252, ${1 - d/mouse.radius})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(mouse.x, mouse.y);
+            ctx.lineTo(p.x, p.y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function animate(){
+      requestAnimationFrame(animate);
+      ctx.clearRect(0,0,innerWidth,innerHeight);
+      for(const p of particlesArray) p.update();
+      connect();
+    }
+    init();
+    animate();
+  </script>
+</body>
+</html>

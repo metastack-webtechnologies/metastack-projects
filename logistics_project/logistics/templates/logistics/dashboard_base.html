@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Logistics OS - Complete UI Prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      defer
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+        color: #e5e7eb;
+      }
+      #bg-video {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        z-index: -100;
+        object-fit: cover;
+      }
+      .glass-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .sidebar-link {
+        transition: background-color 0.2s ease, color 0.2s ease,
+          transform 0.2s ease;
+      }
+      .sidebar-link:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        transform: translateX(4px);
+      }
+      .sidebar-link.active {
+        background-color: rgba(124, 58, 237, 0.3);
+        color: #ffffff;
+        font-weight: 600;
+      }
+      .mobile-card {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .mobile-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      }
+      .animated-element {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      }
+      .animated-element.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .chart-container {
+        height: 350px;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900">
+    <video autoplay muted loop id="bg-video">
+      <!-- The video URL has been updated to a working one. -->
+      <!-- To use your own video, place it in your static folder and use: src="{% static 'videos/your_video.mp4' %}" -->
+      <source
+        src="https://cdn.coverr.co/videos/coverr-a-digital-background-of-plexus-and-dots-7208/1080p.mp4"
+        type="video/mp4"
+      />
+      Your browser does not support the video tag.
+    </video>
+
+    <div class="p-8">
+      <h1 class="text-4xl font-bold text-white mb-2">
+        Logistics OS - Complete UI Prototype
+      </h1>
+      <p class="text-gray-300 mb-8">
+        An interactive prototype of all key screens for the Manager Dashboard
+        and Driver App.
+      </p>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 1: MANAGER DASHBOARD                                        -->
+    <!-- =================================================================== -->
+    <div class="p-8">
+      <h2 class="text-3xl font-bold text-white mb-4">Manager Dashboard</h2>
+      <div
+        class="glass-container rounded-lg shadow-md overflow-hidden"
+        x-data="{ view: 'dashboard' }"
+      >
+        <div class="flex flex-col md:flex-row md:h-[800px]">
+          <!-- Sidebar Navigation -->
+          <aside
+            class="w-full md:w-64 bg-black/10 border-b md:border-b-0 md:border-r border-white/10 flex-shrink-0 flex flex-col"
+          >
+            <div class="p-6">
+              <h2 class="text-2xl font-bold text-white">Logistics OS</h2>
+            </div>
+            <nav class="mt-6 flex-grow">
+              <a
+                href="#"
+                @click.prevent="view = 'dashboard'"
+                :class="{ 'active': view === 'dashboard' }"
+                class="sidebar-link flex items-center px-6 py-3 text-gray-300"
+              >
+                <i class="fas fa-tachometer-alt w-6 text-center"></i
+                ><span class="ml-4">Dashboard</span>
+              </a>
+              <a
+                href="#"
+                @click.prevent="view = 'orders'"
+                :class="{ 'active': view === 'orders' }"
+                class="sidebar-link flex items-center px-6 py-3 text-gray-300"
+              >
+                <i class="fas fa-box w-6 text-center"></i
+                ><span class="ml-4">Orders</span>
+              </a>
+              <a
+                href="#"
+                @click.prevent="view = 'drivers'"
+                :class="{ 'active': view === 'drivers' }"
+                class="sidebar-link flex items-center px-6 py-3 text-gray-300"
+              >
+                <i class="fas fa-truck w-6 text-center"></i
+                ><span class="ml-4">Drivers</span>
+              </a>
+              <a
+                href="#"
+                @click.prevent="view = 'vehicles'"
+                :class="{ 'active': view === 'vehicles' }"
+                class="sidebar-link flex items-center px-6 py-3 text-gray-300"
+              >
+                <i class="fas fa-car-side w-6 text-center"></i
+                ><span class="ml-4">Vehicles</span>
+              </a>
+              <a
+                href="#"
+                @click.prevent="view = 'analytics'"
+                :class="{ 'active': view === 'analytics' }"
+                class="sidebar-link flex items-center px-6 py-3 text-gray-300"
+              >
+                <i class="fas fa-chart-line w-6 text-center"></i
+                ><span class="ml-4">Analytics</span>
+              </a>
+              <a
+                href="#"
+                @click.prevent="view = 'reports'"
+                :class="{ 'active': view === 'reports' }"
+                class="sidebar-link flex items-center px-6 py-3 text-gray-300"
+              >
+                <i class="fas fa-file-alt w-6 text-center"></i
+                ><span class="ml-4">Reports</span>
+              </a>
+              <a
+                href="#"
+                @click.prevent="view = 'billing'"
+                :class="{ 'active': view === 'billing' }"
+                class="sidebar-link flex items-center px-6 py-3 text-gray-300"
+              >
+                <i class="fas fa-file-invoice-dollar w-6 text-center"></i
+                ><span class="ml-4">Billing</span>
+              </a>
+            </nav>
+            <div class="p-6 border-t border-white/10">
+              <a
+                href="#"
+                @click.prevent="view = 'support'"
+                :class="{ 'active': view === 'support' }"
+                class="sidebar-link flex items-center px-6 py-3 text-gray-300"
+              >
+                <i class="fas fa-life-ring w-6 text-center"></i
+                ><span class="ml-4">Support</span>
+              </a>
+              <a
+                href="#"
+                @click.prevent="view = 'settings'"
+                :class="{ 'active': view === 'settings' }"
+                class="sidebar-link flex items-center px-6 py-3 text-gray-300"
+              >
+                <i class="fas fa-cog w-6 text-center"></i
+                ><span class="ml-4">Settings</span>
+              </a>
+            </div>
+          </aside>
+
+          <!-- Main Content Area -->
+          <main class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header Bar -->
+            <header
+              class="bg-black/10 border-b border-white/10 p-4 flex justify-between items-center flex-shrink-0"
+            >
+              <div class="relative w-1/2">
+                <i
+                  class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                ></i>
+                <input
+                  type="text"
+                  placeholder="Search orders, drivers..."
+                  class="bg-white/10 w-full pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white placeholder-gray-400"
+                />
+              </div>
+              <div class="flex items-center space-x-4">
+                <button class="text-gray-300 hover:text-white">
+                  <i class="fas fa-bell text-xl"></i>
+                </button>
+                <div class="flex items-center space-x-2">
+                  <img
+                    src="https://placehold.co/40x40/c4b5fd/1e1b4b?text=A"
+                    alt="Avatar"
+                    class="w-10 h-10 rounded-full"
+                  />
+                  <div>
+                    <p class="font-semibold text-white">Anuradha K.</p>
+                    <p class="text-sm text-gray-400">Manager</p>
+                  </div>
+                </div>
+              </div>
+            </header>
+
+            <div class="p-8 overflow-y-auto">
+              <!-- View 1: dashboard.html -->
+              <div
+                x-show="view === 'dashboard'"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+              >
+                <h3 class="text-3xl font-bold text-white">Dashboard</h3>
+                <p class="text-gray-300 mb-6">
+                  Welcome back! Here's a summary of today's operations.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div class="glass-container p-6 rounded-lg animated-element">
+                    <p class="text-gray-300">Pending Orders</p>
+                    <p
+                      class="text-4xl font-bold text-yellow-400"
+                      data-count="12"
+                    >
+                      0
+                    </p>
+                  </div>
+                  <div
+                    class="glass-container p-6 rounded-lg animated-element"
+                    style="transition-delay: 100ms"
+                  >
+                    <p class="text-gray-300">Out for Delivery</p>
+                    <p class="text-4xl font-bold text-blue-400" data-count="8">
+                      0
+                    </p>
+                  </div>
+                  <div
+                    class="glass-container p-6 rounded-lg animated-element"
+                    style="transition-delay: 200ms"
+                  >
+                    <p class="text-gray-300">Completed Today</p>
+                    <p
+                      class="text-4xl font-bold text-green-400"
+                      data-count="34"
+                    >
+                      0
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="mt-8 glass-container p-6 rounded-lg animated-element"
+                  style="transition-delay: 300ms"
+                >
+                  <h4 class="text-xl font-bold text-white mb-4">
+                    Live Driver Map
+                  </h4>
+                  <div
+                    class="h-96 bg-gray-800/50 rounded-md flex items-center justify-center"
+                  >
+                    <p class="text-gray-400">Map will be integrated here.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- View 2: orders.html -->
+              <div
+                x-show="view === 'orders'"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                style="display: none"
+              >
+                <div class="flex justify-between items-center mb-6">
+                  <h3 class="text-3xl font-bold text-white">
+                    Order Management
+                  </h3>
+                  <button
+                    class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition transform hover:scale-105 active:scale-95"
+                  >
+                    + New Order
+                  </button>
+                </div>
+                <div class="mb-4 flex space-x-2">
+                  <button
+                    class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg"
+                  >
+                    All
+                  </button>
+                  <button
+                    class="bg-white/10 text-gray-200 font-semibold py-2 px-4 rounded-lg border border-white/20"
+                  >
+                    Pending
+                  </button>
+                  <button
+                    class="bg-white/10 text-gray-200 font-semibold py-2 px-4 rounded-lg border border-white/20"
+                  >
+                    Delivered
+                  </button>
+                </div>
+                <div class="glass-container rounded-lg overflow-hidden">
+                  <table class="w-full text-white">
+                    <thead class="bg-white/10">
+                      <tr>
+                        <th class="p-4 text-left font-semibold">Order ID</th>
+                        <th class="p-4 text-left font-semibold">Customer</th>
+                        <th class="p-4 text-left font-semibold">Driver</th>
+                        <th class="p-4 text-left font-semibold">Status</th>
+                        <th class="p-4 text-left font-semibold">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/10">
+                      <tr class="hover:bg-white/5">
+                        <td class="p-4">#1024</td>
+                        <td class="p-4">Anuradha Kolarkar</td>
+                        <td class="p-4 text-gray-400">Unassigned</td>
+                        <td class="p-4">
+                          <span
+                            class="bg-yellow-400/20 text-yellow-300 font-semibold px-2 py-1 rounded-full text-sm"
+                            >Pending</span
+                          >
+                        </td>
+                        <td class="p-4">
+                          <button
+                            class="text-indigo-400 font-semibold hover:underline"
+                          >
+                            Assign
+                          </button>
+                        </td>
+                      </tr>
+                      <tr class="hover:bg-white/5">
+                        <td class="p-4">#1023</td>
+                        <td class="p-4">John Doe</td>
+                        <td class="p-4">Ramesh Kumar</td>
+                        <td class="p-4">
+                          <span
+                            class="bg-blue-400/20 text-blue-300 font-semibold px-2 py-1 rounded-full text-sm"
+                            >Out for Delivery</span
+                          >
+                        </td>
+                        <td class="p-4">
+                          <a
+                            href="#"
+                            class="text-indigo-400 font-semibold hover:underline"
+                            >Details</a
+                          >
+                        </td>
+                      </tr>
+                      <tr class="hover:bg-white/5">
+                        <td class="p-4">#1022</td>
+                        <td class="p-4">Jane Smith</td>
+                        <td class="p-4">Suresh Patel</td>
+                        <td class="p-4">
+                          <span
+                            class="bg-green-400/20 text-green-300 font-semibold px-2 py-1 rounded-full text-sm"
+                            >Delivered</span
+                          >
+                        </td>
+                        <td class="p-4">
+                          <a
+                            href="#"
+                            class="text-indigo-400 font-semibold hover:underline"
+                            >Details</a
+                          >
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="flex justify-end mt-4">
+                  <nav class="flex space-x-2">
+                    <button
+                      class="px-3 py-1 rounded-md bg-white/10 text-gray-300"
+                    >
+                      &laquo;
+                    </button>
+                    <button
+                      class="px-3 py-1 rounded-md bg-indigo-600 text-white"
+                    >
+                      1
+                    </button>
+                    <button
+                      class="px-3 py-1 rounded-md bg-white/10 border border-white/20"
+                    >
+                      2
+                    </button>
+                    <button
+                      class="px-3 py-1 rounded-md bg-white/10 border border-white/20"
+                    >
+                      3
+                    </button>
+                    <button
+                      class="px-3 py-1 rounded-md bg-white/10 text-gray-300"
+                    >
+                      &raquo;
+                    </button>
+                  </nav>
+                </div>
+              </div>
+              <div x-show="view === 'drivers'" style="display: none">
+                <h3 class="text-3xl font-bold text-white">Driver Management</h3>
+              </div>
+              <div x-show="view === 'vehicles'" style="display: none">
+                <h3 class="text-3xl font-bold text-white">
+                  Vehicle Management
+                </h3>
+              </div>
+              <div x-show="view === 'analytics'" style="display: none">
+                <h3 class="text-3xl font-bold text-white mb-6">Analytics</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div class="glass-container p-6 rounded-lg">
+                    <h4 class="font-bold text-lg mb-4 text-white">
+                      Deliveries Over Time
+                    </h4>
+                    <div class="chart-container">
+                      <canvas id="deliveriesChart"></canvas>
+                    </div>
+                  </div>
+                  <div class="glass-container p-6 rounded-lg">
+                    <h4 class="font-bold text-lg mb-4 text-white">
+                      Driver Performance
+                    </h4>
+                    <div class="chart-container">
+                      <canvas id="driversChart"></canvas>
+                    </div>
+                  </div>
+                  <div class="glass-container p-6 rounded-lg lg:col-span-2">
+                    <h4 class="font-bold text-lg mb-4 text-white">
+                      Order Status Breakdown
+                    </h4>
+                    <div class="chart-container max-w-xs mx-auto">
+                      <canvas id="statusChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div x-show="view === 'reports'" style="display: none">
+                <h3 class="text-3xl font-bold text-white">Reports</h3>
+              </div>
+              <div x-show="view === 'billing'" style="display: none">
+                <h3 class="text-3xl font-bold text-white">Billing</h3>
+              </div>
+              <div x-show="view === 'support'" style="display: none">
+                <h3 class="text-3xl font-bold text-white">Support</h3>
+              </div>
+              <div x-show="view === 'settings'" style="display: none">
+                <h3 class="text-3xl font-bold text-white">Settings</h3>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 2: DRIVER APP                                               -->
+    <!-- =================================================================== -->
+    <div class="p-8">
+      <h2 class="text-3xl font-bold text-white mb-4">Driver App</h2>
+      <div class="flex justify-center">
+        <div
+          class="w-96 h-[750px] bg-white rounded-[40px] p-4 shadow-2xl border-4 border-gray-800"
+        >
+          <div class="bg-gray-100 h-full w-full rounded-[24px] overflow-y-auto">
+            <div class="p-4">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Today's Route</h3>
+                <p class="font-semibold text-gray-600">3 Stops</p>
+              </div>
+              <div class="space-y-4">
+                <div
+                  class="bg-white rounded-lg p-4 mobile-card border-l-4 border-indigo-500"
+                >
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <p class="font-bold text-lg text-gray-800">
+                        Anuradha Kolarkar
+                      </p>
+                      <p class="text-gray-500 text-sm">
+                        123, Main Street, Thane
+                      </p>
+                    </div>
+                    <span
+                      class="bg-indigo-100 text-indigo-800 font-semibold px-2 py-1 rounded-full text-xs"
+                      >NEXT</span
+                    >
+                  </div>
+                  <div class="border-t my-4"></div>
+                  <div>
+                    <p class="text-sm text-gray-500">
+                      Items:
+                      <span class="font-medium text-gray-700"
+                        >1x Box, 2x Envelopes</span
+                      >
+                    </p>
+                    <p class="text-sm text-gray-500">
+                      COD Amount:
+                      <span class="font-bold text-red-600">₹ 1,500.00</span>
+                    </p>
+                  </div>
+                  <div class="flex justify-end mt-4 space-x-2">
+                    <button
+                      class="w-full bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg transition hover:bg-gray-300 active:scale-95"
+                    >
+                      Details
+                    </button>
+                    <button
+                      class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition hover:bg-indigo-700 active:scale-95"
+                    >
+                      Navigate
+                    </button>
+                  </div>
+                </div>
+                <div class="bg-white rounded-lg p-4 mobile-card opacity-80">
+                  <p class="font-bold text-lg text-gray-800">John Doe</p>
+                  <p class="text-gray-500 text-sm">456, Oak Avenue, Mumbai</p>
+                </div>
+                <div
+                  class="bg-white rounded-lg p-4 mobile-card opacity-50 bg-gray-50"
+                >
+                  <div class="flex justify-between items-center">
+                    <div>
+                      <p class="font-bold text-lg text-gray-400 line-through">
+                        Jane Smith
+                      </p>
+                      <p class="text-gray-400 line-through text-sm">
+                        789, Pine Lane, Pune
+                      </p>
+                    </div>
+                    <i class="fas fa-check-circle text-green-500 text-2xl"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const animatedElements = document.querySelectorAll(".animated-element");
+        const numberCounters = document.querySelectorAll("[data-count]");
+
+        const animationObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                animationObserver.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
+
+        animatedElements.forEach((el) => {
+          animationObserver.observe(el);
+        });
+
+        const numberObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const counter = entry.target;
+                const countTo = parseInt(counter.dataset.count, 10);
+                const duration = 1500;
+                let start = 0;
+                const stepTime = Math.abs(Math.floor(duration / countTo));
+
+                const timer = setInterval(() => {
+                  start += 1;
+                  counter.textContent = start;
+                  if (start === countTo) {
+                    clearInterval(timer);
+                  }
+                }, stepTime);
+
+                numberObserver.unobserve(counter);
+              }
+            });
+          },
+          { threshold: 0.5 }
+        );
+
+        numberCounters.forEach((counter) => {
+          numberObserver.observe(counter);
+        });
+
+        // Charts
+        const chartOptions = {
+          plugins: { legend: { labels: { color: "#e5e7eb" } } },
+          scales: {
+            x: {
+              ticks: { color: "#9ca3af" },
+              grid: { color: "rgba(255,255,255,0.1)" },
+            },
+            y: {
+              ticks: { color: "#9ca3af" },
+              grid: { color: "rgba(255,255,255,0.1)" },
+            },
+          },
+        };
+
+        new Chart(document.getElementById("deliveriesChart"), {
+          type: "line",
+          data: {
+            labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            datasets: [
+              {
+                label: "Deliveries",
+                data: [12, 19, 3, 5, 2, 3, 7],
+                borderColor: "#818cf8",
+                backgroundColor: "rgba(129, 140, 248, 0.2)",
+                fill: true,
+                tension: 0.4,
+              },
+            ],
+          },
+          options: chartOptions,
+        });
+
+        new Chart(document.getElementById("driversChart"), {
+          type: "bar",
+          data: {
+            labels: ["Ramesh", "Suresh", "Priya", "Amit"],
+            datasets: [
+              {
+                label: "Completed Deliveries",
+                data: [15, 12, 18, 10],
+                backgroundColor: ["#6366f1", "#818cf8", "#a5b4fc", "#c7d2fe"],
+              },
+            ],
+          },
+          options: chartOptions,
+        });
+
+        new Chart(document.getElementById("statusChart"), {
+          type: "doughnut",
+          data: {
+            labels: ["Delivered", "Pending", "Canceled"],
+            datasets: [
+              {
+                data: [300, 50, 25],
+                backgroundColor: ["#34d399", "#f59e0b", "#ef4444"],
+                hoverOffset: 4,
+                borderColor: "transparent",
+              },
+            ],
+          },
+          options: { plugins: { legend: { labels: { color: "#e5e7eb" } } } },
+        });
+      });
+    </script>
+  </body>
+</html>

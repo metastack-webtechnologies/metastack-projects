@@ -1,32 +1,10 @@
-# Node.js
+__pycache__/
+*.py[cod]
+*.egg-info/
+log_os/
+.venv/
+venv/
+db.sqlite3
 node_modules/
-.env
 dist/
 build/
-
-# Python
-__pycache__/
-*.pyc
-.pytest_cache/
-venv/
-# If your IDE generates config files, e.g., for VS Code:
-.vscode/
-
-# Django (local to backend folder, but global ignore is fine too)
-/backend/media/
-/backend/staticfiles/
-/backend/db.sqlite3 # If you use SQLite for backend DB
-
-# React Native
-android/
-ios/
-# Add if you build directly:
-*.apk
-*.aab
-.expo/
-
-# OS generated files
-.DS_Store
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
